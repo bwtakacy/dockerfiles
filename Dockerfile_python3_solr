@@ -1,0 +1,28 @@
+from solr:6.6.0
+USER root
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+RUN apt-get install -y vim
+RUN apt-get install -y software-properties-common
+RUN apt-get install -y git
+RUN apt-get install -y gcc
+RUN apt-get install -y make
+RUN apt-get install -y zlib1g-dev libncurses5-dev
+RUN apt-get install -y libssl-dev
+RUN apt-get install -y libreadline-dev
+RUN apt-get install -y libsqlite3-dev
+RUN apt-get install -y libbz2-dev
+# port
+EXPOSE 5000
+WORKDIR /opt/solr
+USER solr
+RUN git clone https://github.com/yyuu/pyenv.git .pyenv
+ENV HOME  /opt/solr
+ENV PYENV_ROOT $HOME/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+RUN pyenv install 3.6.2
+RUN pyenv global 3.6.2
+RUN pyenv rehash
+RUN pip install flask simplejson
+RUN mkdir ./python-solr-client
+ADD python-solr-client ./python-solr-client
